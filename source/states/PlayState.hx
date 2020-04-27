@@ -19,11 +19,11 @@ class PlayState extends AbstractGameState
 		coffins = new FlxTypedGroup<Coffin>();
 		add(coffins);
 
-		gravemen = new FlxTypedGroup<Graveman>();
-		add(gravemen);
-
 		new GameMap("assets/data/dungeon.tmx", this);
 		FlxG.camera.zoom = 2;
+
+		gravemen = new FlxTypedGroup<Graveman>();
+		add(gravemen);
 	}
 
 	override public function update(elapsed:Float)
@@ -60,5 +60,29 @@ class PlayState extends AbstractGameState
 		if (character != null)
 			return character.getMidpoint();
 		return FlxPoint.weak(-1, -1);
+	}
+
+	public function getCharacter():Character
+	{
+		return character;
+	}
+
+	override function isObstructing(logicalX:Int, logicalY:Int):Bool
+	{
+		if (super.isObstructing(logicalX, logicalY))
+			return true;
+
+		var git = gravemen.iterator();
+		while (git.hasNext())
+		{
+			var next = git.next();
+			if (next.alive && next.getLogicalX() == logicalX && next.getLogicalY() == logicalY)
+				return true;
+		}
+
+		if (character.getLogicalX() == logicalX && character.getLogicalY() == logicalY)
+			return true;
+
+		return false;
 	}
 }

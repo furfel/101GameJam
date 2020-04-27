@@ -51,6 +51,6 @@ class AbstractGameState extends FlxState
 	public function addCharacter(char:Character)
 	{
 		add(char);
-		FlxG.camera.follow(char, TOPDOWN, 1.0);
+		FlxG.camera.follow(char, TOPDOWN, 0.5);
 	}
 }

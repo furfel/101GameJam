@@ -30,7 +30,7 @@ class GameMap
 
 			if (o.type == "coffin" && (state is PlayState))
 			{
-				cast(state, PlayState).addCoffin(new Coffin(o));
+				cast(state, PlayState).addCoffin(new Coffin(o, state));
 			}
 		}
 

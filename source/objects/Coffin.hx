@@ -47,16 +47,16 @@ class Coffin extends FlxBasic
 
 	private function spawn()
 	{
-		var freepoints = [];
-		for (x in X - 1...X + 1)
-			for (y in Y - 1...Y + 1)
-			{
+		var freepoints:Array<Array<Int>> = new Array<Array<Int>>();
+		for (x in X - 1...X + 2)
+			for (y in Y - 1...Y + 2)
 				if (!parent.isObstructing(x, y))
 					freepoints.push([x, y]);
-			}
+
+		if (freepoints.length <= 0)
+			return;
 
 		FlxG.random.shuffle(freepoints);
-
-		cast(parent, PlayState).addGraveman(new Graveman(freepoints[0][0], freepoints[0][1], parent));
+		cast(parent, PlayState).addGraveman(graveman = new Graveman(freepoints[0][0], freepoints[0][1], parent));
 	}
 }

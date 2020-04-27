@@ -2,6 +2,7 @@ package;
 
 import Main.Direction;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import objects.AbstractSprite;
 
@@ -14,42 +15,8 @@ class Character extends AbstractSprite
 	{
 		super.update(elapsed);
 
-		var movementOccured = false;
 		var speed = (logicalX * Main.SPRITE_SIZE != x && logicalY * Main.SPRITE_SIZE != y) ? DIAGSPEED : SPEED;
-
-		if (logicalX * Main.SPRITE_SIZE < x)
-		{
-			if (x - logicalX * Main.SPRITE_SIZE > speed * elapsed)
-				x -= speed * elapsed;
-			else
-				x = logicalX * Main.SPRITE_SIZE;
-			movementOccured = true;
-		}
-		else if (logicalX * Main.SPRITE_SIZE > x)
-		{
-			if (logicalX * Main.SPRITE_SIZE - x > speed * elapsed)
-				x += speed * elapsed;
-			else
-				x = logicalX * Main.SPRITE_SIZE;
-			movementOccured = true;
-		}
-
-		if (logicalY * Main.SPRITE_SIZE < y)
-		{
-			if (y - logicalY * Main.SPRITE_SIZE > speed * elapsed)
-				y -= speed * elapsed;
-			else
-				y = logicalY * Main.SPRITE_SIZE;
-			movementOccured = true;
-		}
-		else if (logicalY * Main.SPRITE_SIZE > y)
-		{
-			if (logicalY * Main.SPRITE_SIZE - y > speed * elapsed)
-				y += speed * elapsed;
-			else
-				y = logicalY * Main.SPRITE_SIZE;
-			movementOccured = true;
-		}
+		var movementOccured = updateMovement(elapsed, speed);
 
 		if (!movementOccured)
 		{
@@ -84,23 +51,32 @@ class Character extends AbstractSprite
 			case LEFT:
 				if (!parent.isObstructing(logicalX - 1, logicalY))
 					logicalX -= 1;
+				facing = FlxObject.LEFT;
 
 			case RIGHT:
 				if (!parent.isObstructing(logicalX + 1, logicalY))
 					logicalX += 1;
+				facing = FlxObject.RIGHT;
 
 			case DOWN:
 				if (!parent.isObstructing(logicalX, logicalY + 1))
 					logicalY += 1;
+				facing = FlxObject.DOWN;
 
 			case UP:
 				if (!parent.isObstructing(logicalX, logicalY - 1))
 					logicalY -= 1;
+				facing = FlxObject.UP;
 		}
 	}
 
 	public function getLogicalPosition():Array<Int>
 	{
 		return [logicalX, logicalY];
+	}
+
+	public function invisibleCloak():Bool
+	{
+		return false;
 	}
 }

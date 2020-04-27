@@ -21,6 +21,52 @@ class AbstractSprite extends FlxSprite
 		createSprite();
 	}
 
+	function updateMovement(elapsed:Float, speed:Float):Bool
+	{
+		var movementOccured = false;
+		if (logicalX * Main.SPRITE_SIZE < x)
+		{
+			if (x - logicalX * Main.SPRITE_SIZE > speed * elapsed)
+				x -= speed * elapsed;
+			else
+				x = logicalX * Main.SPRITE_SIZE;
+			movementOccured = true;
+		}
+		else if (logicalX * Main.SPRITE_SIZE > x)
+		{
+			if (logicalX * Main.SPRITE_SIZE - x > speed * elapsed)
+				x += speed * elapsed;
+			else
+				x = logicalX * Main.SPRITE_SIZE;
+			movementOccured = true;
+		}
+
+		if (logicalY * Main.SPRITE_SIZE < y)
+		{
+			if (y - logicalY * Main.SPRITE_SIZE > speed * elapsed)
+				y -= speed * elapsed;
+			else
+				y = logicalY * Main.SPRITE_SIZE;
+			movementOccured = true;
+		}
+		else if (logicalY * Main.SPRITE_SIZE > y)
+		{
+			if (logicalY * Main.SPRITE_SIZE - y > speed * elapsed)
+				y += speed * elapsed;
+			else
+				y = logicalY * Main.SPRITE_SIZE;
+			movementOccured = true;
+		}
+
+		return movementOccured;
+	}
+
+	public function getLogicalX()
+		return logicalX;
+
+	public function getLogicalY()
+		return logicalY;
+
 	@:abstract
 	function createSprite() {}
 }
