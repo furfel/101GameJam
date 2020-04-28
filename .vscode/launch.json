@@ -10,7 +10,9 @@
 			"name": "Debug",
 			"type": "lime",
 			"request": "launch",
-			"preLaunchTask": null
+			"runtimeExecutable": "/usr/bin/chromium-browser",
+			"args": "--remote-debugging-port=9222",
+			"preLaunchTask": "lime: build html5 -debug"
 		},
 		{
 			"name": "Macro",
@@ -20,9 +22,10 @@
 		{
 			"name": "HashLink Debug",
 			"type": "hl",
-			"request": "launch",
+			"request": "attach",
 			"cwd": "${workspaceFolder}",
-			"hxml": "export/hl/haxe/debug.hxml"
+			"hxml": "export/hl/haxe/debug.hxml",
+			"port": 6000
 		}
 	]
 }

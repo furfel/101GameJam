@@ -1,6 +1,6 @@
 package states;
 
-import objects.Wall;
+import objects.*;
 
 class MenuState extends AbstractGameState
 {

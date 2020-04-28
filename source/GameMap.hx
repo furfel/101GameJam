@@ -3,7 +3,7 @@ package;
 import flixel.addons.editors.tiled.*;
 import flixel.addons.tile.FlxTilemapExt;
 import flixel.tile.FlxTilemap;
-import objects.Coffin;
+import objects.*;
 import states.AbstractGameState;
 import states.PlayState;
 

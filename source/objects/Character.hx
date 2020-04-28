@@ -1,4 +1,4 @@
-package;
+package objects;
 
 import Main.Direction;
 import flixel.FlxG;
@@ -10,6 +10,8 @@ class Character extends AbstractSprite
 {
 	public static final SPEED = 128.0;
 	public static final DIAGSPEED = SPEED / Math.sqrt(2);
+
+	private var sword:Sword = null;
 
 	override function update(elapsed:Float)
 	{
@@ -30,6 +32,7 @@ class Character extends AbstractSprite
 		var keyW = FlxG.keys.anyPressed([W, UP]);
 		var keyA = FlxG.keys.anyPressed([A, LEFT]);
 		var keyD = FlxG.keys.anyPressed([D, RIGHT]);
+		var keySp = FlxG.keys.anyPressed([SPACE]);
 
 		if (!(keyS && keyW))
 			if (keyS)
@@ -42,6 +45,17 @@ class Character extends AbstractSprite
 				move(LEFT);
 			else if (keyD)
 				move(RIGHT);
+
+		if (keySp)
+		{
+			if (sword == null || sword.alive == false)
+			{
+				if (sword != null)
+					parent.remove(sword);
+				sword = new Sword(this);
+				parent.add(sword);
+			}
+		}
 	}
 
 	public function move(dir:Direction)

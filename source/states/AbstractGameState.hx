@@ -6,6 +6,7 @@ import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
+import objects.*;
 
 class AbstractGameState extends FlxState
 {
