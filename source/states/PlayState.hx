@@ -85,4 +85,14 @@ class PlayState extends AbstractGameState
 
 		return false;
 	}
+
+	public function getGravemen():FlxTypedGroup<Graveman>
+	{
+		return gravemen;
+	}
+
+	public function removeGraveman(g:Graveman)
+	{
+		gravemen.remove(g);
+	}
 }

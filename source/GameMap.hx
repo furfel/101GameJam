@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxG;
 import flixel.addons.editors.tiled.*;
 import flixel.addons.tile.FlxTilemapExt;
 import flixel.tile.FlxTilemap;
@@ -36,6 +37,8 @@ class GameMap
 
 		insertLayer(state, cast map.getLayer("walls"), true);
 		insertLayer(state, cast map.getLayer("objects"), true);
+
+		FlxG.worldBounds.set(0, 0, map.fullWidth, map.fullHeight);
 	}
 
 	function insertLayer(state:AbstractGameState, layer:TiledTileLayer, blocking:Bool = false)

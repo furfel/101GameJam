@@ -1,5 +1,6 @@
 package objects;
 
+import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
@@ -14,6 +15,8 @@ class Sword extends FlxSprite
 	private var startX = 0.0;
 	private var startY = 0.0;
 	private var radius = 1.0;
+	private var startW = 0.0;
+	private var startH = 0.0;
 
 	public function new(c:Character)
 	{
@@ -22,6 +25,8 @@ class Sword extends FlxSprite
 		startX = c.x + c.width / 2;
 		startY = c.y + c.height / 2;
 		radius = c.width / 2;
+		startW = width;
+		startH = height;
 		setFlip(c.facing);
 	}
 
@@ -29,50 +34,48 @@ class Sword extends FlxSprite
 	{
 		x = startX + Math.cos(DEG_TO_RAD * angle) * radius;
 		y = startY + Math.sin(DEG_TO_RAD * angle) * radius;
-		if (angle >= 60 && angle <= 120 || angle >= 240 && angle <= 300)
+		if (angle >= 70 && angle <= 110 || angle >= 260 && angle <= 290)
 		{
 			x -= width / 2;
 		}
 		else
-			y -= height / 2;
+			y += height / 2;
 	}
 
 	private function setFlip(dir:Int)
 	{
 		if (dir == FlxObject.RIGHT)
 		{
-			angle = 30.0;
-			endAngle = -30.0;
+			angle = 20.0;
+			endAngle = -20.0;
 			startX -= radius / 2;
 			updateCosinePosition();
 		}
 		else if (dir == FlxObject.LEFT)
 		{
-			angle = 220.0;
-			endAngle = 150.0;
+			angle = 200.0;
+			endAngle = 160.0;
 			startX -= 3 * radius / 2;
 			updateCosinePosition();
 		}
 		else if (dir == FlxObject.UP)
 		{
-			var w = width;
-			width = height;
-			height = w;
+			width = startH;
+			height = startW;
 			centerOffsets();
 			startY -= 3 * radius / 2;
-			angle = 300;
-			endAngle = 240;
+			angle = 290.0;
+			endAngle = 260.0;
 			updateCosinePosition();
 		}
 		else if (dir == FlxObject.DOWN)
 		{
-			var w = width;
-			width = height;
-			height = w;
+			width = startH;
+			height = startW;
 			centerOffsets();
 			startY -= radius / 2;
-			angle = 120;
-			endAngle = 60;
+			angle = 110.0;
+			endAngle = 70.0;
 			updateCosinePosition();
 		}
 		else
@@ -84,7 +87,7 @@ class Sword extends FlxSprite
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		if (alive)
+		if (exists)
 		{
 			if (angle < endAngle)
 			{
