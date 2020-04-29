@@ -48,6 +48,19 @@ class PlayState extends AbstractGameState
 				cast(key, Key).kill();
 			}
 		});
+
+		if (!teleporting)
+			FlxG.overlap(character, doors, (c, door) ->
+			{
+				if ((door is Door))
+				{
+					var doorD = cast(door, Door);
+					if (!doorD.isClosed())
+					{
+						teleport(doorD.getTarget()[0], doorD.getTarget()[1]);
+					}
+				}
+			});
 	}
 
 	public function addCoffin(coffin:Coffin)
@@ -97,6 +110,23 @@ class PlayState extends AbstractGameState
 	public function addKey(key:Key)
 	{
 		keys.add(key);
+	}
+
+	override function doAction(logicalX:Int, logicalY:Int):Bool
+	{
+		var iter = doors.iterator();
+		while (iter.hasNext())
+		{
+			var d = iter.next();
+			if (d.getHitbox()
+				.containsPoint(FlxPoint.weak(logicalX * Main.SPRITE_SIZE + Main.SPRITE_SIZE_HALF, logicalY * Main.SPRITE_SIZE + Main.SPRITE_SIZE_HALF)))
+			{
+				if (d.tryOpen(character.getKeys()))
+					return true;
+				return false;
+			}
+		}
+		return false;
 	}
 
 	override function isObstructing(logicalX:Int, logicalY:Int):Bool

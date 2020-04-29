@@ -163,7 +163,20 @@ class Character extends AbstractSprite
 
 	private function doAction()
 	{
-		FlxG.sound.play("assets/sounds/noaction.ogg");
+		var tx = logicalX;
+		var ty = logicalY;
+		if (facing == FlxObject.RIGHT)
+			tx += 1;
+		else if (facing == FlxObject.LEFT)
+			tx -= 1;
+		else if (facing == FlxObject.DOWN)
+			ty += 1;
+		if (parent.doAction(tx, ty))
+			FlxG.sound.play("assets/sounds/action.ogg");
+		else if (facing == FlxObject.UP && parent.doAction(tx, ty - 1))
+			FlxG.sound.play("assets/sounds/action.ogg");
+		else
+			FlxG.sound.play("assets/sounds/noaction.ogg");
 	}
 
 	private function hitWithSword()
@@ -229,5 +242,16 @@ class Character extends AbstractSprite
 	public function addKey(k:String)
 	{
 		keysInventory.push(k);
+	}
+
+	public function getKeys():Array<String>
+	{
+		return keysInventory;
+	}
+
+	public function setXY(x:Int, y:Int)
+	{
+		logicalX = x;
+		logicalY = y;
 	}
 }

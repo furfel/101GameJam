@@ -1,5 +1,6 @@
 package objects;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.math.FlxPoint;
@@ -42,13 +43,15 @@ class Door extends AbstractSprite
 			animation.frameIndex = 0;
 	}
 
-	public function tryOpen(keys:Array<String>)
+	public function tryOpen(keys:Array<String>):Bool
 	{
 		if (keys.indexOf(key) >= 0)
 		{
 			isOpen = true;
 			animation.play("open");
+			return true;
 		}
+		return false;
 	}
 
 	public function stepOn(c:Character)
@@ -76,4 +79,7 @@ class Door extends AbstractSprite
 		target[0] = t[0];
 		target[1] = t[1];
 	}
+
+	public function getTarget():Array<Float>
+		return target;
 }

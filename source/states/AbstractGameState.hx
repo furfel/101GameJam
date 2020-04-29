@@ -43,6 +43,11 @@ class AbstractGameState extends FlxState
 		}
 	}
 
+	public function doAction(logicalX:Int, logicalY:Int):Bool
+	{
+		return false;
+	}
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -79,9 +84,12 @@ class AbstractGameState extends FlxState
 		FlxG.camera.follow(char, TOPDOWN, 0.5);
 	}
 
+	public var teleporting = false;
+
 	public function teleportByName(n:String)
 	{
 		var parts = n.split(":");
+		teleporting = true;
 		FlxG.camera.fade(FlxColor.BLACK, 0.6, false, () ->
 		{
 			if (parts[0] == "menu")
@@ -90,6 +98,7 @@ class AbstractGameState extends FlxState
 				FlxG.switchState(new PlayState(parts[1]));
 			else
 				FlxG.camera.fade(FlxColor.BLACK, 0.6, true);
+			teleporting = false;
 		});
 	}
 
@@ -107,12 +116,15 @@ class AbstractGameState extends FlxState
 	// Teleport within this state
 	public function teleport(tox:Float, toy:Float)
 	{
+		teleporting = true;
 		FlxG.camera.fade(FlxColor.BLACK, 0.6, false, () ->
 		{
-			character.setPosition(tox, toy);
 			character.last.set(tox, toy);
+			character.setPosition(tox, toy);
+			character.setXY(Std.int((tox + Main.SPRITE_SIZE_HALF) / Main.SPRITE_SIZE), Std.int((toy + Main.SPRITE_SIZE_HALF) / Main.SPRITE_SIZE));
 			FlxG.camera.focusOn(character.getMidpoint());
 			FlxG.camera.fade(FlxColor.BLACK, 0.6, true);
+			teleporting = false;
 		});
 	}
 }
