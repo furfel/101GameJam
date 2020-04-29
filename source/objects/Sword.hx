@@ -17,29 +17,44 @@ class Sword extends FlxSprite
 	private var radius = 1.0;
 	private var startW = 0.0;
 	private var startH = 0.0;
+	private var tipCenterX = 0.0;
+	private var tipCenterY = 0.0;
+	private var tipRadius = 1.0;
 
 	public function new(c:Character)
 	{
-		super(-10, -10);
+		super(c.x + c.width / 2, c.y + c.height / 2);
 		loadGraphic("assets/images/sword.png", false);
-		startX = c.x + c.width / 2;
-		startY = c.y + c.height / 2;
+		x = startX = c.x + c.width / 2;
+		y = startY = c.y + c.height / 2;
+		tipCenterX = c.getMidpoint().x;
+		tipCenterY = c.getMidpoint().y;
+		tip.copyFrom(c.getMidpoint());
+		tipRadius = width - 2;
+
 		radius = c.width / 2;
 		startW = width;
 		startH = height;
+		alive = false;
 		setFlip(c.facing);
+		alive = true;
 	}
 
 	private function updateCosinePosition()
 	{
-		x = startX + Math.cos(DEG_TO_RAD * angle) * radius;
-		y = startY + Math.sin(DEG_TO_RAD * angle) * radius;
+		var cosx = Math.cos(DEG_TO_RAD * angle);
+		var siny = Math.sin(DEG_TO_RAD * angle);
+
+		var x = startX + cosx * radius;
+		var y = startY + siny * radius;
+		tip.set(tipCenterX + cosx * tipRadius, tipCenterY + siny * tipRadius);
 		if (angle >= 70 && angle <= 110 || angle >= 260 && angle <= 290)
 		{
 			x -= width / 2;
 		}
 		else
-			y += height / 2;
+			y -= startH / 2;
+		setPosition(x, y);
 	}
 
 	private function setFlip(dir:Int)
@@ -84,6 +99,12 @@ class Sword extends FlxSprite
 		}
 	}
 
+	override function destroy()
+	{
+		super.destroy();
+		tip.put();
+	}
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -107,4 +128,9 @@ class Sword extends FlxSprite
 			}
 		}
 	}
+
+	private var tip:FlxPoint = FlxPoint.get(0, 0);
+
+	public function getTip()
+		return tip;
 }

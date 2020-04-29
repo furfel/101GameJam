@@ -4,6 +4,7 @@ import Main.Direction;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.math.FlxRect;
 import haxe.display.Display.Package;
 import objects.AbstractSprite;
 import states.PlayState;
@@ -31,8 +32,17 @@ class Character extends AbstractSprite
 
 		if ((parent is PlayState) && sword != null && sword.alive)
 		{
-			if (FlxG.collide(sword, cast(parent, PlayState).getGravemen(), killGraveman))
-				sword.alive = false;
+			var iter = cast(parent, PlayState).getGravemen().iterator();
+			while (iter.hasNext())
+			{
+				var g = iter.next();
+				if (g.alive && FlxRect.weak(g.x, g.y, g.width, g.height).containsPoint(sword.getTip()))
+				{
+					killGraveman(sword, g);
+					sword.alive = false;
+					break;
+				}
+			}
 		}
 	}
 
@@ -174,5 +184,10 @@ class Character extends AbstractSprite
 	public function invisibleCloak():Bool
 	{
 		return false;
+	}
+
+	public function getSword():Sword
+	{
+		return sword;
 	}
 }

@@ -1,9 +1,11 @@
 package states;
 
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
 import objects.*;
 
 class PlayState extends AbstractGameState
