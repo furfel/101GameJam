@@ -4,6 +4,7 @@ import Main.Direction;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.input.gamepad.FlxGamepad;
 import flixel.math.FlxRect;
 import haxe.display.Display.Package;
 import objects.AbstractSprite;
@@ -101,6 +102,7 @@ class Character extends AbstractSprite
 	}
 
 	private var keySp = false;
+	private var keyRet = false;
 
 	private function handleMovement()
 	{
@@ -108,6 +110,19 @@ class Character extends AbstractSprite
 		var keyW = FlxG.keys.anyPressed([W, UP]);
 		var keyA = FlxG.keys.anyPressed([A, LEFT]);
 		var keyD = FlxG.keys.anyPressed([D, RIGHT]);
+
+		var gamepad = FlxG.gamepads.lastActive;
+		var gamePadHit = false;
+		var gamePadAction = false;
+		if (gamepad != null)
+		{
+			keyA = keyA || gamepad.analog.value.LEFT_STICK_X < -0.5;
+			keyD = keyD || gamepad.analog.value.LEFT_STICK_X > 0.5;
+			keyW = keyW || gamepad.analog.value.LEFT_STICK_Y < -0.5;
+			keyS = keyS || gamepad.analog.value.LEFT_STICK_Y > 0.5;
+			gamePadHit = gamepad.pressed.A;
+			gamePadAction = gamepad.pressed.B;
+		}
 
 		if (!(keyS && keyW))
 			if (keyS)
@@ -123,15 +138,32 @@ class Character extends AbstractSprite
 
 		if (!keySp)
 		{
-			keySp = FlxG.keys.anyPressed([SPACE]);
+			keySp = FlxG.keys.anyPressed([SPACE]) || gamePadHit;
 			if (keySp)
 				hitWithSword();
 		}
 		else
 		{
-			if (!FlxG.keys.anyPressed([SPACE]))
+			if (!(FlxG.keys.anyPressed([SPACE]) || gamePadHit))
 				keySp = false;
 		}
+
+		if (!keyRet)
+		{
+			keyRet = FlxG.keys.anyPressed([ENTER]) || gamePadAction;
+			if (keyRet)
+				doAction();
+		}
+		else
+		{
+			if (!(FlxG.keys.anyPressed([ENTER]) || gamePadAction))
+				keyRet = false;
+		}
+	}
+
+	private function doAction()
+	{
+		FlxG.sound.play("assets/sounds/noaction.ogg");
 	}
 
 	private function hitWithSword()

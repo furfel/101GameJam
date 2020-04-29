@@ -84,7 +84,7 @@ class Graveman extends AbstractSprite
 
 	public function getHit()
 	{
-		FlxG.sound.play("assets/sounds/hit.ogg");
+		FlxG.sound.play("assets/sounds/hit.ogg", 0.85);
 		shock += 0.5;
 		health -= 33;
 		if (health <= 0)

@@ -17,7 +17,7 @@ class Door extends AbstractSprite
 	public static function fromTiledObject(o:TiledObject, parent:AbstractGameState)
 	{
 		var X = Std.int((o.x + Main.SPRITE_SIZE_HALF) / Main.SPRITE_SIZE);
-		var Y = Std.int((o.y + Main.SPRITE_SIZE_HALF) / Main.SPRITE_SIZE);
+		var Y = Std.int((o.y - Main.SPRITE_SIZE_HALF) / Main.SPRITE_SIZE);
 
 		var door = new Door(X, Y, parent);
 

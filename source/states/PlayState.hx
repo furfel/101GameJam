@@ -13,6 +13,7 @@ class PlayState extends AbstractGameState
 	private var coffins:FlxTypedGroup<Coffin>;
 	private var gravemen:FlxTypedGroup<Graveman>;
 	private var keys:FlxTypedGroup<Key>;
+	private var doors:FlxTypedGroup<Door>;
 
 	override public function create()
 	{
@@ -63,6 +64,14 @@ class PlayState extends AbstractGameState
 	public function addGraveman(graveman:Graveman)
 	{
 		gravemen.add(graveman);
+	}
+
+	public function addDoors(doors:Array<Door>)
+	{
+		this.doors = new FlxTypedGroup<Door>();
+		for (d in doors)
+			this.doors.add(d);
+		add(this.doors);
 	}
 
 	public function getCharacterPosition():Array<Int>

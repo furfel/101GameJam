@@ -44,6 +44,8 @@ class GameMap
 			{
 				state.teleportPointsArray.set(o.name, [o.x, o.y]);
 			}
+			else if (o.type == "key" && (state is PlayState))
+				cast(state, PlayState).addKey(new Key(o));
 		}
 
 		for (door in doors)
@@ -53,6 +55,9 @@ class GameMap
 				door.updateTarget(state.teleportPointsArray.get(door.getTargetName()));
 			}
 		}
+
+		if ((state is PlayState))
+			cast(state, PlayState).addDoors(doors);
 
 		if (character != null)
 			state.addCharacter(character);
