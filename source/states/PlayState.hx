@@ -10,7 +10,6 @@ import objects.*;
 
 class PlayState extends AbstractGameState
 {
-	private var character:Character;
 	private var coffins:FlxTypedGroup<Coffin>;
 	private var gravemen:FlxTypedGroup<Graveman>;
 
@@ -26,6 +25,8 @@ class PlayState extends AbstractGameState
 
 		gravemen = new FlxTypedGroup<Graveman>();
 		add(gravemen);
+
+		postCreateTrigger();
 	}
 
 	override public function update(elapsed:Float)

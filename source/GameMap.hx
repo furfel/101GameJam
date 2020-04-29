@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.addons.editors.tiled.*;
 import flixel.addons.tile.FlxTilemapExt;
 import flixel.tile.FlxTilemap;
@@ -23,17 +24,38 @@ class GameMap
 		insertLayer(state, cast map.getLayer("ground"), false);
 		insertLayer(state, cast map.getLayer("middle"), false);
 
+		var doors = new Array<Door>();
+		var character:Character = null;
+
 		var O:TiledObjectLayer = cast map.getLayer("O");
 		for (o in O.objects)
 		{
 			if (o.type == "player")
-				state.addCharacter(new Character(Std.int(o.x / map.tileWidth), Std.int(o.y / map.tileHeight), state));
-
-			if (o.type == "coffin" && (state is PlayState))
+				character = new Character(Std.int(o.x / map.tileWidth), Std.int(o.y / map.tileHeight), state);
+			else if (o.type == "coffin" && (state is PlayState))
 			{
 				cast(state, PlayState).addCoffin(new Coffin(o, state));
 			}
+			else if (o.type == "door")
+			{
+				doors.push(Door.fromTiledObject(o, state));
+			}
+			else if (o.type == "target")
+			{
+				state.teleportPointsArray.set(o.name, [o.x, o.y]);
+			}
 		}
+
+		for (door in doors)
+		{
+			if (state.teleportPointsArray.exists(door.getTargetName()))
+			{
+				door.updateTarget(state.teleportPointsArray.get(door.getTargetName()));
+			}
+		}
+
+		if (character != null)
+			state.addCharacter(character);
 
 		insertLayer(state, cast map.getLayer("walls"), true);
 		insertLayer(state, cast map.getLayer("objects"), true);

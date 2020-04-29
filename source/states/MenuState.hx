@@ -12,6 +12,8 @@ class MenuState extends AbstractGameState
 		addObstructing(new Wall(100, 420, 352, 64));
 		addObstructing(new Wall(420, 100, 64, 352));
 		add(new Character(3, 3, this));
+
+		postCreateTrigger();
 	}
 
 	override function update(elapsed:Float)
