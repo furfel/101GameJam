@@ -12,16 +12,21 @@ class PlayState extends AbstractGameState
 {
 	private var coffins:FlxTypedGroup<Coffin>;
 	private var gravemen:FlxTypedGroup<Graveman>;
+	private var keys:FlxTypedGroup<Key>;
 
 	override public function create()
 	{
 		super.create();
+
+		keys = new FlxTypedGroup<Key>();
 
 		coffins = new FlxTypedGroup<Coffin>();
 		add(coffins);
 
 		new GameMap("assets/data/dungeon.tmx", this);
 		FlxG.camera.zoom = 2;
+
+		add(keys);
 
 		gravemen = new FlxTypedGroup<Graveman>();
 		add(gravemen);
@@ -32,6 +37,16 @@ class PlayState extends AbstractGameState
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		FlxG.overlap(character, keys, (c, key) ->
+		{
+			if ((key is Key) && cast(key, Key).alive)
+			{
+				FlxG.sound.play("assets/sounds/key.ogg");
+				character.addKey(cast(key, Key).name);
+				cast(key, Key).kill();
+			}
+		});
 	}
 
 	public function addCoffin(coffin:Coffin)
@@ -68,6 +83,11 @@ class PlayState extends AbstractGameState
 	public function getCharacter():Character
 	{
 		return character;
+	}
+
+	public function addKey(key:Key)
+	{
+		keys.add(key);
 	}
 
 	override function isObstructing(logicalX:Int, logicalY:Int):Bool

@@ -16,6 +16,8 @@ class Character extends AbstractSprite
 
 	private var sword:Sword = null;
 
+	private var keysInventory = new Array<String>();
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -144,6 +146,7 @@ class Character extends AbstractSprite
 				parent.insert(inx, sword);
 			else
 				parent.insert(inx + 1, sword);
+			FlxG.sound.play("assets/sounds/sword.ogg");
 		}
 	}
 
@@ -189,5 +192,10 @@ class Character extends AbstractSprite
 	public function getSword():Sword
 	{
 		return sword;
+	}
+
+	public function addKey(k:String)
+	{
+		keysInventory.push(k);
 	}
 }
