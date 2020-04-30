@@ -7,6 +7,7 @@ import flixel.addons.tile.FlxTilemapExt;
 import flixel.tile.FlxTilemap;
 import objects.*;
 import states.AbstractGameState;
+import states.MenuState;
 import states.PlayState;
 
 class GameMap
@@ -26,6 +27,7 @@ class GameMap
 
 		var doors = new Array<Door>();
 		var character:Character = null;
+		var winCup:Wincup = null;
 
 		var O:TiledObjectLayer = cast map.getLayer("O");
 		for (o in O.objects)
@@ -46,6 +48,14 @@ class GameMap
 			}
 			else if (o.type == "key" && (state is PlayState))
 				cast(state, PlayState).addKey(new Key(o));
+			else if (o.type == "wincup")
+				winCup = new Wincup(o.x, o.y);
+			else if (o.type == "potion" && (state is PlayState))
+				cast(state, PlayState).addPotion(new Potion(o));
+			else if (o.type == "playgame" && (state is MenuState))
+				cast(state, MenuState).addPlayDoor(Door.fromTiledObject(o, state));
+			else if (o.type == "exitgame" && (state is MenuState))
+				cast(state, MenuState).addExitDoor(Door.fromTiledObject(o, state));
 		}
 
 		for (door in doors)
@@ -57,7 +67,11 @@ class GameMap
 		}
 
 		if ((state is PlayState))
+		{
 			cast(state, PlayState).addDoors(doors);
+			if (winCup != null)
+				cast(state, PlayState).addWin(winCup);
+		}
 
 		if (character != null)
 			state.addCharacter(character);

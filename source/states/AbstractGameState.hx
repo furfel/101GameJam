@@ -39,8 +39,8 @@ class AbstractGameState extends FlxState
 		if (teleportIn != null)
 		{
 			teleportInByName(teleportIn);
-			FlxG.camera.fade(FlxColor.BLACK, 0.6, true);
 		}
+		FlxG.camera.fade(FlxColor.BLACK, 0.6, true);
 	}
 
 	public function doAction(logicalX:Int, logicalY:Int):Bool
@@ -80,8 +80,9 @@ class AbstractGameState extends FlxState
 
 	public function addCharacter(char:Character)
 	{
-		add(char);
-		FlxG.camera.follow(char, TOPDOWN, 0.5);
+		char.last.set(char.x, char.y);
+		add(character = char);
+		FlxG.camera.follow(character, TOPDOWN, 0.5);
 	}
 
 	public var teleporting = false;
@@ -126,5 +127,15 @@ class AbstractGameState extends FlxState
 			FlxG.camera.fade(FlxColor.BLACK, 0.6, true);
 			teleporting = false;
 		});
+	}
+
+	override function destroy()
+	{
+		if (character != null)
+			remove(character);
+
+		character = null;
+
+		super.destroy();
 	}
 }

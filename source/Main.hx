@@ -13,7 +13,7 @@ class Main extends Sprite
 	{
 		super();
 		// addChild(new FlxGame(0, 0, MenuState));
-		addChild(new FlxGame(0, 0, PlayState));
+		addChild(new FlxGame(0, 0, MenuState, 1, 60, 60, true));
 	}
 }
 

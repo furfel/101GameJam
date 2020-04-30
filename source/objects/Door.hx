@@ -36,16 +36,17 @@ class Door extends AbstractSprite
 	{
 		loadGraphic("assets/images/door.png", true, 32, 32);
 		animation.add("open", [0, 1, 2, 3, 4], false);
+		animation.add("slowopen", [0, 0, 0, 0, 0, 1, 2, 3, 4], 5, false);
 
 		if (isOpen)
-			animation.frameIndex = 4;
-		else
-			animation.frameIndex = 0;
+			animation.play("open");
+		if ((parent is MenuState))
+			animation.play("slowopen");
 	}
 
 	public function tryOpen(keys:Array<String>):Bool
 	{
-		if (keys.indexOf(key) >= 0)
+		if (!isOpen && keys.indexOf(key) >= 0)
 		{
 			isOpen = true;
 			animation.play("open");

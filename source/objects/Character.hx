@@ -7,6 +7,7 @@ import flixel.FlxSprite;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.math.FlxRect;
 import haxe.display.Display.Package;
+import hud.Healthbar;
 import objects.AbstractSprite;
 import states.PlayState;
 
@@ -19,11 +20,16 @@ class Character extends AbstractSprite
 
 	private var keysInventory = new Array<String>();
 
+	private var healthbar:Healthbar = new Healthbar();
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
 		setAnimation();
+
+		healthbar.placeOnObject(this.getMidpoint());
+		healthbar.setHealth(health);
 
 		var speed = (logicalX * Main.SPRITE_SIZE != x && logicalY * Main.SPRITE_SIZE != y) ? DIAGSPEED : SPEED;
 		var movementOccured = updateMovement(elapsed, speed);
@@ -68,6 +74,8 @@ class Character extends AbstractSprite
 
 		animation.play("sd");
 		facing = FlxObject.DOWN;
+
+		health = 100;
 	}
 
 	private function setAnimation()
@@ -181,6 +189,8 @@ class Character extends AbstractSprite
 
 	private function hitWithSword()
 	{
+		if (locked)
+			return;
 		if (sword == null || sword.alive == false)
 		{
 			if (sword != null)
@@ -197,6 +207,9 @@ class Character extends AbstractSprite
 
 	public function move(dir:Direction)
 	{
+		if (locked)
+			return;
+
 		if (sword != null && sword.exists)
 			return; // When we hit we can't move lol
 
@@ -254,4 +267,14 @@ class Character extends AbstractSprite
 		logicalX = x;
 		logicalY = y;
 	}
+
+	public function getHealthbar()
+	{
+		return healthbar;
+	}
+
+	private var locked = false;
+
+	public function lock()
+		locked = true;
 }

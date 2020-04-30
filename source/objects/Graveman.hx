@@ -4,6 +4,7 @@ import Main.Direction;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.util.FlxColor;
+import hud.Healthbar;
 import states.PlayState;
 
 class Graveman extends AbstractSprite
@@ -12,6 +13,12 @@ class Graveman extends AbstractSprite
 	public static final SPEED = 96;
 	public static final DIAGSPEED = SPEED / Math.sqrt(2);
 	public static final CREATION = .75;
+
+	private var healthbar:Healthbar = new Healthbar();
+	private var stone:Stone = null;
+
+	public function getHealthbar()
+		return healthbar;
 
 	public function move(dir:Direction)
 	{
@@ -82,16 +89,48 @@ class Graveman extends AbstractSprite
 		animation.play(anim);
 	}
 
+	override function kill()
+	{
+		super.kill();
+		if ((parent is PlayState))
+			cast(parent, PlayState).removeHealthbar(healthbar);
+	}
+
 	public function getHit()
 	{
-		FlxG.sound.play("assets/sounds/hit.ogg", 0.85);
 		shock += 0.5;
 		health -= 33;
 		if (health <= 0)
+		{
 			kill();
+			FlxG.sound.play("assets/sounds/death.ogg", 0.9);
+		}
+		else
+			FlxG.sound.play("assets/sounds/hit.ogg", 0.85);
 	}
 
-	private function updateStep()
+	private var throwCooldown = FlxG.random.float(0.8, 1.3);
+
+	private function throwStone(char:Character)
+	{
+		if (!(parent is PlayState))
+			return;
+
+		if (stone != null && !stone.alive)
+			cast(parent, PlayState).removeStone(stone);
+
+		throwCooldown = FlxG.random.float(1.2, 2.0);
+		stone = new Stone(getMidpoint().x - 8.0, getMidpoint().y - 8.0, char.getMidpoint().x - 8.0, char.getMidpoint().y - 8.0);
+
+		cast(parent, PlayState).addStone(stone);
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+	}
+
+	private function updateStep(elapsed:Float)
 	{
 		if ((parent is PlayState))
 		{
@@ -100,6 +139,14 @@ class Graveman extends AbstractSprite
 			{
 				var playerpos = s.getCharacterPosition();
 				stepTowardsPlayer(playerpos[0], playerpos[1]);
+
+				if (stone == null || !stone.alive)
+				{
+					if (throwCooldown <= 0.0)
+						throwStone(s.getCharacter());
+					else
+						throwCooldown -= elapsed;
+				}
 			}
 			else
 			{
@@ -169,6 +216,9 @@ class Graveman extends AbstractSprite
 		if (updateCreation(elapsed))
 			return;
 
+		healthbar.placeOnObject(getMidpoint());
+		healthbar.setHealth(health);
+
 		var speed = (logicalX * Main.SPRITE_SIZE != x && logicalY * Main.SPRITE_SIZE != y) ? DIAGSPEED : SPEED;
 
 		if (updateShock(elapsed))
@@ -178,7 +228,7 @@ class Graveman extends AbstractSprite
 
 		if (!movementOccured)
 		{
-			updateStep();
+			updateStep(elapsed);
 		}
 	}
 
